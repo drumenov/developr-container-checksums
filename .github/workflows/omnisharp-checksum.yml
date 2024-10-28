@@ -1,0 +1,24 @@
+name: Calculate SHA512
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download release
+        run: curl -sL "https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.39.12/omnisharp-linux-x64-net6.0.tar.gz" -o release.tar.gz
+
+      - name: Caluclate Omnisharp's SHA512
+        run: |
+          sha512sum release.tar.gz
+
+      - name: Clone Telescope
+        run: git clone --depth 1 --branch 0.1.8 https://github.com/nvim-telescope/telescope.nvim.git telescope && cd telescope && mkdir tmp
+
+      - name: Calculate Telescope's SHA512
+        run: tar -czf tmp/telescope.tar.gz . && sha512sum tmp/telescope.tar.gz
